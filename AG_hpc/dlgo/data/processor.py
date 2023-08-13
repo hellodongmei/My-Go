@@ -24,16 +24,16 @@ from dlgo.data.generator import DataGenerator
 
 # tag::processor_init[]
 class GoDataProcessor:
-    def __init__(self, encoder='alphago', data_directory='data'):
+    def __init__(self, encoder='alphago', data_directory='/home/users/l/liudong1/scratch/AG/data'):
         self.encoder = get_encoder_by_name(encoder, 9)
         self.data_dir = data_directory
 # end::processor_init[]
 
 # tag::load_go_data[]
-    def load_go_data(self, data_type='train', num_samples=1000, use_generator=False):  # <2>
+    def load_go_data(self, data_type='train', num_samples=1000, num_test_games = 100, use_generator=False):  # <2>
         index = os.listdir(self.data_dir)
 
-        sampler = Sampler(data_dir=self.data_dir)
+        sampler = Sampler(data_dir=self.data_dir, num_test_games=num_test_games)
         data = sampler.draw_data(data_type, num_samples)  # <4>
 
         # for filename in data:
@@ -45,12 +45,12 @@ class GoDataProcessor:
         # features_and_labels = self.consolidate_games(data_type, data)  # <8>
         # return features_and_labels
 
-        if use_generator:
-            generator = DataGenerator(self.data_dir, data)
-            return generator  # <2>
-        else:
-            features_and_labels = self.consolidate_games(data_type, data)
-            return features_and_labels  # <3>
+        # if use_generator:
+        #     generator = DataGenerator(self.data_dir, data, data_type)
+        #     return generator  # <2>
+        # else:
+        #     features_and_labels = self.consolidate_games(data_type, data)
+        #     return features_and_labels  # <3>
 
 # <1> Map workload to CPUs
 # <2> Either return a Go data generator...
@@ -91,6 +91,7 @@ class GoDataProcessor:
         feature_shape = np.insert(shape, 0, np.asarray([total_examples]))
         features = np.zeros(feature_shape)
         labels = np.zeros((total_examples,))
+        print(total_examples)
 
         for filename in data_list:
             if not filename.endswith('.sgf'): continue

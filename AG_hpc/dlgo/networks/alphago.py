@@ -1,7 +1,10 @@
 # tag::alphago_base[]
-from keras.models import Sequential
-from keras.layers.core import Dense, Flatten
-from keras.layers.convolutional import Conv2D
+# from keras.models import Sequential
+from tensorflow.keras import Sequential
+# from keras.layers.core import Dense, Flatten
+# from keras.layers.convolutional import Conv2D
+from tensorflow.keras.layers import Dense, Activation, Flatten
+from tensorflow.keras.layers import Conv2D
 
 # strong policy has 13 layers; value policy has 16 layers
 

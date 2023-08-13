@@ -10,7 +10,7 @@ from six.moves import range
 
 class Sampler:
     """Sample training and test data from zipped sgf files such that test data is kept stable."""
-    def __init__(self, data_dir='data', num_test_games=100, cap_month=11, seed=1337):
+    def __init__(self, data_dir='/home/users/l/liudong1/scratch/AG/data', num_test_games=100, cap_month=11, seed=1337):
         self.data_dir = data_dir
         self.num_test_games = num_test_games
         self.test_games = []
@@ -39,17 +39,18 @@ class Sampler:
         for filename in index:
             if not filename.endswith('.sgf'): continue
             month = int(filename.split('-')[1])
-            if month > self.cap_month:
+            if month <= self.cap_month:
+                # all test example are from the test collecting month
                 continue
             available_games.append(filename) 
-        print('>>> Total number of games used: ' + str(len(available_games)))
+        print('>>> Total number of test games used: ' + str(len(available_games)))
 
         sample_set = set()
         while len(sample_set) < num_sample_games:
             sample = random.choice(available_games)
             if sample not in sample_set:
                 sample_set.add(sample)
-        print('Drawn ' + str(num_sample_games) + ' samples:')
+        print('Drawn ' + str(num_sample_games) + 'test samples:')
         return list(sample_set)
 
     def draw_training_games(self):
@@ -98,14 +99,14 @@ class Sampler:
             if month > self.cap_month:
                 continue
             available_games.append(filename)
-        print('total num games: ' + str(len(available_games)))
+        print('total training num games: ' + str(len(available_games)))
 
         sample_set = set()
         while len(sample_set) < num_sample_games:
             sample = random.choice(available_games)
             if sample not in self.test_games:
                 sample_set.add(sample)
-        print('Drawn ' + str(num_sample_games) + ' samples:')
+        print('Drawn ' + str(num_sample_games) + 'traning samples:')
         return list(sample_set)        
 
 
